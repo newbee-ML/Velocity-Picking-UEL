@@ -4,7 +4,7 @@
 The code for the manuscript named 'Automatic Stack Velocity Picking Using an Unsupervised Ensemble Learning Method' (UEL) submitted to Computers & Geosciences.
 
 
-## 0 Preparing
+## Preparing
 
 ### Python packages
 
