@@ -1,7 +1,8 @@
 import os
 
-RootPath = r'D:\\Spectrum'
-SaveRoot = r'F:\\VelocitySpectrum\\UEL'
+RootPath = '/mnt/data/spectrum'
+SaveRoot = 'results'
+
 """
 root path of dataset folder
 """

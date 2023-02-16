@@ -91,7 +91,6 @@ def MainFunc(opt):
     # main flow
     ###################################
     IndexList = DataLoader.TestIndexList[:opt.TestNum]
-    IndexList = ['2240-1440'] + IndexList
     Picker = UELPick(opt)
     PlotCount = 1
 
@@ -133,20 +132,20 @@ def MainFunc(opt):
         PickDict['time'] += Finalpicks[:, 0].astype(np.int32).tolist()
         PickDict['velocity'] += Finalpicks[:, 1].astype(np.int32).tolist()
         def PlotModule():
-            PlotSpec(DataDict['Current']['spectrum'], t0Vec, vVec, save_path=os.path.join(SaveFig, '%s-0Ori-%s.pdf'%(index, opt.EpName)))
-            PlotSpec(LMSpec, t0Vec, vVec, save_path=os.path.join(SaveFig, '%s-0LM-%s.pdf'%(index, opt.EpName)))
-            PlotSpec(LMSpec, t0Vec, vVec, VelCurve=[AP, MP], VelPick=Finalpicks, save_path=os.path.join(SaveFig, '%s-1PWRwMPick-%s.pdf'%(index, opt.EpName)))
+            PlotSpec(DataDict['Current']['spectrum'], t0Vec, vVec, save_path=os.path.join(SaveFig, '%s-0Ori-%s.png'%(index, opt.EpName)))
+            PlotSpec(LMSpec, t0Vec, vVec, save_path=os.path.join(SaveFig, '%s-0LM-%s.png'%(index, opt.EpName)))
+            PlotSpec(LMSpec, t0Vec, vVec, VelCurve=[AP, MP], VelPick=Finalpicks, save_path=os.path.join(SaveFig, '%s-1PWRwMPick-%s.png'%(index, opt.EpName)))
             tVec, OffsetVec = DataDict['Current']['scale']['t-gth'], DataDict['Current']['scale']['offset']
             gth = DataDict['Current']['gth']
             APL = interpolation(AP, tVec, vVec)
             MPL = interpolation(DataDict['Current']['label'], tVec, vVec)
             NMOGth = NMOCorr(gth, tVec, OffsetVec, APL[:, 1])
             NMOGthGT = NMOCorr(gth, tVec, OffsetVec, MPL[:, 1])
-            PlotGth(gth, tVec, OffsetVec, os.path.join(SaveFig, '%s-2OriGth-%s.pdf'%(index, opt.EpName)))
-            PlotGth(NMOGth, tVec, OffsetVec, os.path.join(SaveFig, '%s-3NMOGth-%s.pdf'%(index, opt.EpName)))
-            PlotGth(NMOGthGT, tVec, OffsetVec, os.path.join(SaveFig, '%s-4NMOGthGT-%s.pdf'%(index, opt.EpName)))
-            PlotNearPWR(DataDict['Near']['spectrum'], DataDict['Near']['index'], os.path.join(SaveFig, '%s-5NearPwr-%s.pdf'%(index, opt.EpName)))
-            RefVelPlot(NearPoints[:, :2], NearPoints[:, 2], NearVel, opt.EnBwNear, DataDict['Current']['label'], t0Vec, vVec, os.path.join(SaveFig, '%s-6NearPwrRef-%s.pdf'%(index, opt.EpName)))
+            PlotGth(gth, tVec, OffsetVec, os.path.join(SaveFig, '%s-2OriGth-%s.png'%(index, opt.EpName)))
+            PlotGth(NMOGth, tVec, OffsetVec, os.path.join(SaveFig, '%s-3NMOGth-%s.png'%(index, opt.EpName)))
+            PlotGth(NMOGthGT, tVec, OffsetVec, os.path.join(SaveFig, '%s-4NMOGthGT-%s.png'%(index, opt.EpName)))
+            PlotNearPWR(DataDict['Near']['spectrum'], DataDict['Near']['index'], os.path.join(SaveFig, '%s-5NearPwr-%s.png'%(index, opt.EpName)))
+            RefVelPlot(NearPoints[:, :2], NearPoints[:, 2], NearVel, opt.EnBwNear, DataDict['Current']['label'], t0Vec, vVec, os.path.join(SaveFig, '%s-6NearPwrRef-%s.png'%(index, opt.EpName)))
 
 
         if PlotCount < opt.VisualNum:

@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.animation as ani
-import matplotlib as mpl 
-from torchvision import transforms
+import matplotlib as mpl
 import numpy as np
 import copy
 import os

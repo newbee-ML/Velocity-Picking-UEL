@@ -6,114 +6,50 @@ The code for the manuscript named 'Automatic Stack Velocity Picking Using an Uns
 
 ## 0 Preparing
 
-### 0.1 Python, CUDA and Pytorch
+### Python packages
 
-* Python 3.7
+- create conda env and install python packages
+```shell
+conda create -n SynData python=3.8
+conda list -e > requirements.txt
+```
 
-* CUDA 11.0
+### Prepare dataset
+- field dataset from your segy file
+  - You need prepara two segy(sgy) files which includes velocity spectra and CMP gather infomation, and a label file which includes the velocity labels. You have to build the h5 file for the index of samples, as shown in https://github.com/newbee-ML/MIFN-Velocity-Picking/blob/master/utils/BuiltStkDataSet.py
+- synthetic dataset
+  - we provide a example synthetic dataset in repo: https://github.com/newbee-ML/Synthetic-Seismic-Velocity-Spectrum
 
-* Pytorch  1.7.1  GPU
+After the above preparation, your dataset folder has to follow the structure:
+```
+-- data-root
+  |-- field-set-A
+    |-- segy
+    |-- h5file
+    |-- v_t_labels.npy
+  |-- synthetic-S1
+    |-- gth
+    |-- pwr
+    |-- ModelInfo.npy
+  |-- ... 
+```
 
-  ```shell
-  pip install torch==1.7.1+cu110 torchvision==0.8.2+cu110 torchaudio==0.7.2 -f https://download.pytorch.org/whl/torch_stable.html
-  ```
 
-### 0.2 Python packages
-
-* install packages based on `requirements.txt`
+## Utilize UEL to automatically pick
+Using the following code to utilize UEL to pick velocity spectrum of synthetic dataset named S1 automatically.
+> tips: we should first check your path setting in `data/config.py`
 
 ```shell
-pip install -r requirements.txt
+python UtilizeUEL.py --SetName S1 --EpName syn-S1 --TestNum 10 --VisualNum 5
 ```
 
-### 0.3 Requirement structure for data folder
-
-* You should follow the structure for repreducing
-
-  --- Root
-
-  ​        |___   segy
-
-  ​					 |___  vel.stk.sgy 
-
-  ​					 |___  vel.pwr.sgy 
-
-  ​					 |___  vel.gth.sgy
-
-  ​		|___   t_v_labels.dat
-
-## 1 code structure
-
+You will obtain the following log in your shell terminal like these:
 ```
-MIFN-VELOCITY-PICKING
-│  predict.py                 # main predict 
-│  README-ch.md               # readme in CH
-│  README.md                  # readme in EN
-│  requirements.txt           # python packages list
-│  test.py                    # main test
-│  train.py                   # main train
-│
-├─loss  // loss function
-│      detail_loss.py
-│      loss.py
-│      util.py
-│      __init__.py
-│
-├─net  // our proposed MIFN
-│      AblationNet.py
-│      BasicModule.py
-│      MIFNet.py
-│      __init__.py
-│
-├─Tuning  // tuning
-│      tuning.py
-│
-└─utils  // other tools
-        BuiltStkDataSet.py
-        evaluate.py
-        GetNMOResult.py
-        LabTxt2Npy.py
-        LoadData.py
-        logger.py
-        metrics.py
-        PastProcess.py
-        PlotTools.py
-        remove.py
-        SpecEnhanced.py
-        __init__.py
+All xxx samples,  x are seeds
+2023-02-16 15:32:02,965 - Line 2240     CDP 1440        VMAE 10.310     VMER 0.269      PR 100.000      MD 9.507        Center Num 23
+2023-02-16 15:32:08,656 - Line 2240     CDP 1520        VMAE 19.359     VMER 0.679      PR 100.000      MD 18.163       Center Num 20
+2023-02-16 15:32:13,597 - Line 2240     CDP 1560        VMAE 20.055     VMER 0.663      PR 100.000      MD 19.973       Center Num 13
+2023-02-16 15:32:18,409 - Line 2240     CDP 1600        VMAE 26.514     VMER 0.809      PR 100.000      MD 21.533       Center Num 13
 ```
-
-## 2 train your model
-
-Please run the following code in the repo root.
-
-### 2.1 transfer labels file type and generate h5 datasets 
-
-```shell
-# Transfer label file "t_v_labels.dat" to “t_v_labels.npy”
-python utils/LabTxt2Npy.py /Root/t_v_labels.dat /Root/t_v_labels.npy
-# Make H5 dataset
-python utils/BuiltStkDataSet.py /Root
-```
-
-### 2.2 training processing
-
-```shell
-# run on cmd (windows) or terminal (linux)
-python train.py --DataSetRoot Root --DataSet SetName --GatherLen GatherLen --SeedRate 0.6 --trainBS 16
-# an example
-python train.py --DataSetRoot /home/colin/data/Spectrum/hade --DataSet hade --GatherLen 15 --SeedRate 0.6 --trainBS 16
-```
-
-
-## 3 predict
-
-```shell
-# run on cmd (windows) or terminal (linux)
-python predict.py --LoadModel PthPath --DataSetRoot Root --DataSet SetName --GatherLen GatherLen --PredBS 16
-
-# an example
-python predict.py --LoadModel /home/colin/Project/spectrum/MIFN-Submit/result/hade/model/hade_256_0.6.pth --DataSetRoot /home/colin/data/Spectrum/hade --DataSet hade --GatherLen 15 --PredBS 16
-```
-
-tips：results saved in CSV file, including four columns: 1 line, 2 trace, 3 time, 4 velocities.
+Also, you can check your visual results in `results/UEL/Ep-name-xxx/figs/xxx.png` like this:
+![2240-1440-1PWRwMPick](results/UEL/syn-S1/figs/2240-1440-1PWRwMPick-syn-S1.png)

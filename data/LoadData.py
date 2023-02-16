@@ -1,6 +1,5 @@
 import numpy as np
 from scipy import interpolate
-from torchvision import transforms
 from data.config import SetPath
 import os
 import h5py
