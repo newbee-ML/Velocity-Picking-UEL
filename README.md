@@ -52,4 +52,9 @@ All xxx samples,  x are seeds
 2023-02-16 15:32:18,409 - Line 2240     CDP 1600        VMAE 26.514     VMER 0.809      PR 100.000      MD 21.533       Center Num 13
 ```
 Also, you can check your visual results in `results/UEL/Ep-name-xxx/figs/xxx.png` like this:
-![2240-1440-1PWRwMPick](results/UEL/syn-S1/figs/2240-1440-1PWRwMPick-syn-S1.png)
+
+- automatically picking results
+![automatically picking results](results/UEL/syn-S1/figs/2240-1600-1PWRwMPick-syn-S1.png)
+
+- normal moveout correction by auot-picked velocity
+![generate cmp gather](results/UEL/syn-S1/figs/2240-1600-3NMOGth-syn-S1.png)
